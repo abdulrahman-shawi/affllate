@@ -1,0 +1,823 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ActivityTargetCycle {
+  DAILY
+  MONTHLY
+}
+
+enum ActivityWeekDay {
+  SATURDAY
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+enum MovementType {
+  IN
+  OUT
+  TRANSFER
+  ADJUSTMENT
+  RETURN
+}
+
+enum WarrantyType {
+  REPLACEMENT
+  MAINTENANCE
+  DAMAGED
+}
+
+enum ExpenseType {
+  DAILY
+  STAFF_SALARY
+  RENT
+}
+
+enum ExpenseCurrency {
+  SYP
+  TRY
+  USD
+}
+
+enum PaidFromOffice {
+  TURKEY
+  SYRIA
+}
+
+enum AccountType {
+  ADMIN
+  MANAGER
+  STAFF
+  AFFILIATE
+}
+
+// ============================================
+// NEW Enums (for E-commerce Affiliate)
+// ============================================
+
+enum EcommerceRole {
+  ADMIN
+  AFFILIATE
+  CUSTOMER
+}
+
+enum CommissionStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+// ============================================
+// User (Existing + New columns)
+// ============================================
+
+model User {
+  id                     String          @id @default(uuid())
+  username               String
+  email                  String          @unique
+  phone                  String?
+  notes                  String?
+  jobTitle               String?
+  avatar                 String?
+  accountType            AccountType     @default(STAFF)
+  password               String
+  salesCommissionPercent Float           @default(0)
+  wage                   Int             @default(0)
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  permissionId           String?
+  parentId               String?
+
+  // ─── NEW: E-commerce Affiliate columns (nullable / with defaults) ───
+  isAffiliate            Boolean         @default(false)
+  affiliateApproved      Boolean         @default(false)
+  affiliateCode          String?         @unique
+  affiliateRequestedAt   DateTime?
+  affiliateApprovedAt    DateTime?
+
+  // ─── Existing Relations ───
+  parent          User?    @relation("UserToSubordinates", fields: [parentId], references: [id])
+  subordinates    User[]   @relation("UserToSubordinates")
+  orders                 Order[]
+  permission             Permission?     @relation(fields: [permissionId], references: [id])
+  customers              Customer[]      @relation("CustomerToUser")
+  message                Message[]
+  targets                UserTarget[]
+  activityTargets        UserActivityTarget[]
+  salaryAdjustments      EmployeeSalaryAdjustment[]
+  expenses               Expense[]
+  stockMovements         StockMovement[]
+
+  // ─── NEW: E-commerce Affiliate Relations ───
+  affiliateLinks         AffiliateLink[]
+  reviews                Review[]
+}
+
+// ============================================
+// Permission (Existing — Unchanged)
+// ============================================
+
+model Permission {
+  id       String @id @default(uuid())
+  roleName String
+
+  viewProducts   Boolean @default(false)
+  addProducts    Boolean @default(false)
+  editProducts   Boolean @default(false)
+  deleteProducts Boolean @default(false)
+
+  viewReports   Boolean @default(false)
+  addReports    Boolean @default(false)
+  editReports   Boolean @default(false)
+  deleteReports Boolean @default(false)
+
+  viewOrders   Boolean @default(false)
+  addOrders    Boolean @default(false)
+  editOrders   Boolean @default(false)
+  deleteOrders Boolean @default(false)
+
+  viewCustomers   Boolean @default(false)
+  addCustomers    Boolean @default(false)
+  editCustomers   Boolean @default(false)
+  deleteCustomers Boolean @default(false)
+
+  viewEmployees   Boolean @default(false)
+  addEmployees    Boolean @default(false)
+  editEmployees   Boolean @default(false)
+  deleteEmployees Boolean @default(false)
+
+  viewExpenses   Boolean @default(false)
+  addExpenses    Boolean @default(false)
+  editExpenses   Boolean @default(false)
+  deleteExpenses Boolean @default(false)
+
+  viewAnalytics Boolean @default(false)
+
+  viewCategories   Boolean @default(false)
+  addCategories    Boolean @default(false)
+  editCategories   Boolean @default(false)
+  deleteCategories Boolean @default(false)
+
+  viewPermissions   Boolean @default(false)
+  editPermissions   Boolean @default(false)
+  addPermissions    Boolean @default(false)
+  deletePermissions Boolean @default(false)
+
+  viewPages   Boolean @default(false)
+  addPages    Boolean @default(false)
+  editPages   Boolean @default(false)
+  deletePages Boolean @default(false)
+
+  accessSyria  Boolean @default(false)
+  accessTurkey Boolean @default(false)
+  users        User[]
+}
+
+// ============================================
+// Category (Existing + New columns)
+// ============================================
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+
+  // ─── NEW: E-commerce Affiliate columns ───
+  slug     String?   @unique
+  image    String?
+  isVisible Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  products Product[]
+  offerDiscounts OfferDiscount[]
+}
+
+// ============================================
+// Product (Existing + New columns)
+// ============================================
+
+model Product {
+  id             Int             @id @default(autoincrement())
+  name           String
+  description    String?
+  googleLink     String?
+  categoryId     Int?
+  createdAt      DateTime        @default(now())
+
+  // ─── NEW: E-commerce Affiliate columns ───
+  seoSlug               String?  @unique
+  metaTitle             String?
+  metaDescription       String?
+  metaKeywords          String?
+  isActive              Boolean  @default(true)
+  showInAds             Boolean  @default(false)
+  affiliatePrice        Float    @default(0)
+  affiliateCommissionRate Float? @default(10.00)
+
+  // ─── Existing Relations ───
+  orderItems     OrderItem[]
+  category       Category?       @relation(fields: [categoryId], references: [id])
+  images         ProductImage[]
+  targetProducts TargetProduct[]
+  stocks         ProductStock[]
+  stockMovements StockMovement[]
+  warrantiesAsProduct     Warranty[] @relation("WarrantyOriginalProduct")
+
+  // ─── NEW: E-commerce Affiliate Relations ───
+  affiliateLinks AffiliateLink[]
+  reviews        Review[]
+  landingPage    ProductLandingPage?
+  offerDiscounts OfferDiscount[]
+}
+
+// ============================================
+// ProductLandingPage (Landing Page Content per Product)
+// ============================================
+
+model ProductLandingPage {
+  id                  String   @id @default(cuid())
+  productId           Int      @unique
+  product             Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // Hero content overrides
+  heroTitle           String?
+  heroSubtitle        String?
+  heroDescription     String?
+  badgeText           String?
+  discountPercent     Int?
+
+  // Features section (JSON array of { title, description })
+  features            Json?    @default("[]")
+
+  // Trust / Guarantee
+  showReviews         Boolean  @default(true)
+  showGuarantee       Boolean  @default(true)
+  guaranteeTitle      String?
+  guaranteeText       String?
+
+  // CTA
+  ctaText             String?
+  quantityDiscountTiers Json?    @default("[]")
+
+  // Status
+  isActive            Boolean  @default(true)
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@map("product_landing_pages")
+}
+
+// ============================================
+// Review (NEW TABLE)
+// ============================================
+
+model Review {
+  id          String   @id @default(uuid())
+  productId   Int      @map("product_id")
+  userId      String?  @map("user_id")
+  name        String
+  rating      Int
+  comment     String?
+  isApproved  Boolean  @default(true) @map("is_approved")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
+// ============================================
+// Warehouse (Existing — Unchanged)
+// ============================================
+
+model Warehouse {
+  id        Int             @id @default(autoincrement())
+  name      String          @unique
+  location  String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  stocks    ProductStock[]
+  orders    Order[]
+  movements StockMovement[]
+  warranties Warranty[]
+}
+
+// ============================================
+// ProductStock (Existing — Unchanged)
+// ============================================
+
+model ProductStock {
+  id          Int       @id @default(autoincrement())
+  productId   Int
+  warehouseId Int
+  quantity    Int       @default(0)
+  price       Float     @default(0)
+  discount    Float     @default(0)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, warehouseId])
+}
+
+// ============================================
+// StockMovement (Existing — Unchanged)
+// ============================================
+
+model StockMovement {
+  id          String       @id @default(uuid())
+  productId   Int
+  warehouseId Int
+  userId      String?
+  quantity    Int
+  type        MovementType
+  reason      String?
+  createdAt   DateTime     @default(now())
+
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id])
+}
+
+// ============================================
+// UserTarget (Existing — Unchanged)
+// ============================================
+
+model UserTarget {
+  id               String          @id @default(uuid())
+  userId           String
+  salesTargetValue Int[]           @default([])
+  salesRewardValue Int[]           @default([])
+  isActive         Boolean         @default(true)
+  endedAt          DateTime?
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products         TargetProduct[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+// ============================================
+// UserActivityTarget (Existing — Unchanged)
+// ============================================
+
+model UserActivityTarget {
+  id                            String              @id @default(uuid())
+  userId                        String
+  cycle                         ActivityTargetCycle @default(DAILY)
+  activeWeekDays                ActivityWeekDay[]   @default([SATURDAY, SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY])
+  requiredCustomers             Int                 @default(0)
+  customerReward                Float               @default(0)
+  customerMissPenaltyAmount     Float               @default(0)
+  requiredCommunications        Int                 @default(0)
+  communicationReward           Float               @default(0)
+  communicationMissPenaltyAmount Float              @default(0)
+  startsAt                      DateTime            @default(now())
+  endedAt                       DateTime?
+  isActive                      Boolean             @default(true)
+  createdAt                     DateTime            @default(now())
+  updatedAt                     DateTime            @updatedAt
+  user                          User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive, cycle])
+}
+
+// ============================================
+// TargetProduct (Existing — Unchanged)
+// ============================================
+
+model TargetProduct {
+  id          String     @id @default(uuid())
+  targetId    String
+  productId   Int
+  requiredQty Int[]
+  rewardValue Int[]
+  target      UserTarget @relation(fields: [targetId], references: [id], onDelete: Cascade)
+  product     Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([targetId, productId])
+}
+
+// ============================================
+// ProductImage (Existing — Unchanged)
+// ============================================
+
+model ProductImage {
+  id        Int     @id @default(autoincrement())
+  url       String
+  type      String
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// ============================================
+// Customer (Existing — Unchanged)
+// ============================================
+
+model Customer {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  phone       String[]
+  countryCode String?
+  phonestatus String?
+  country     String?
+  gender      String?
+  age         String?
+  source      String?
+  city        String?
+  rating      Int?
+  status      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  orders      Order[]
+  users       User[]    @relation("CustomerToUser")
+  message     Message[]
+  warranties  Warranty[]
+}
+
+// ============================================
+// Warranty (Existing — Unchanged)
+// ============================================
+
+model Warranty {
+  id                   String       @id @default(uuid())
+  type                 WarrantyType
+  productId            Int
+  customerId           String
+  warehouseId          Int?
+  quantity             Int          @default(1)
+  maintenanceLaborCost Float?
+  shippingCost         Float?
+  notes                String?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  product            Product   @relation("WarrantyOriginalProduct", fields: [productId], references: [id], onDelete: Cascade)
+  customer           Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  warehouse          Warehouse? @relation(fields: [warehouseId], references: [id], onDelete: SetNull)
+}
+
+// ============================================
+// Message (Existing — Unchanged)
+// ============================================
+
+model Message {
+  id         String   @id @default(uuid())
+  message    String?
+  customerId String
+  userId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ============================================
+// Order (Existing + New columns)
+// ============================================
+
+model Order {
+  id                              Int         @id @default(autoincrement())
+  orderNumber                     String      @unique
+  usdToTryRateAtOrder            Float?
+  shippingPrice                   Float?
+  moneyTransferCommission         Float? @default(0)
+  otherCommissions                Float? @default(0)
+  carrierCollectionReceivedAt    DateTime?
+  carrierCollectionReceivedAmount Float?
+  carrierCollectionNotes         String?
+  totalAmount                     Float
+  discount                        Float       @default(0)
+  finalAmount                     Float
+  paymentMethod                   String
+  pay                             String?
+  receiverName                    String?
+  receiverPhone                   String[]
+  country                         String?
+  city                            String?
+  invoiceImage                    String?
+  municipality                    String?
+  fullAddress                     String?
+  deliveryNotes                   String?
+  googleMapsLink                  String?
+  amount                          String?
+  amountBank                      String?
+  deliveryMethod                  String?
+  additionalNotes                 String?
+  status                          String      @default("PENDING")
+  customerId                      String
+  userId                          String?
+  warehouseId                     Int?
+  shippingId                      Int?
+  manualCreatedAt                 DateTime?
+  createdAt                       DateTime    @default(now())
+  updatedAt                       DateTime    @updatedAt
+
+  // ─── Existing Relations ───
+  customer        Customer    @relation(fields: [customerId], references: [id])
+  user            User?       @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+  warehouse       Warehouse?  @relation(fields: [warehouseId], references: [id])
+  shipping        shipping?   @relation(fields: [shippingId], references: [id])
+
+  // ─── NEW: E-commerce Affiliate Relations ───
+  commissions     Commission[]
+
+  @@index([createdAt])
+  @@index([customerId, createdAt])
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
+  @@index([warehouseId, createdAt])
+}
+
+// ============================================
+// Expense (Existing — Unchanged)
+// ============================================
+
+model Expense {
+  id             Int              @id @default(autoincrement())
+  type           ExpenseType      @default(DAILY)
+  amount         Float
+  salaryBaseWage Float?
+  description    String?
+  currency       ExpenseCurrency?
+  paidFromOffice PaidFromOffice?
+  employeeId     String?
+  scheduledDate  DateTime?
+  notes          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  employee       User?            @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+}
+
+// ============================================
+// shipping (Existing — Unchanged)
+// ============================================
+
+model shipping {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  price       Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  orders      Order[]
+}
+
+// ============================================
+// OrderItem (Existing + New columns)
+// ============================================
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int     @default(1)
+  price     Float
+  discount  Float
+  orderId   Int
+  productId Int
+
+  // ─── NEW: E-commerce Affiliate tracking ───
+  affiliateLinkId String?
+
+  // ─── Existing Relations ───
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+
+  // ─── NEW: E-commerce Affiliate Relation ───
+  affiliateLink AffiliateLink? @relation(fields: [affiliateLinkId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([affiliateLinkId])
+}
+
+// ============================================
+// TrakingCompany (Existing — Unchanged)
+// ============================================
+
+model TrakingCompany {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  city      String?
+  location  String?
+  price     Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// Page (Static Pages: About, Privacy Policy, etc.)
+// ============================================
+
+model Page {
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  content         String   @db.Text
+  metaTitle       String?
+  metaDescription String?
+  isPublished     Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("pages")
+}
+
+
+// ============================================
+// HeroSlide (E-commerce Homepage Slider)
+// ============================================
+
+model HeroSlide {
+  id          String   @id @default(cuid())
+  title       String?
+  subtitle    String?
+  image       String
+  buttonText  String?
+  buttonLink  String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("hero_slides")
+}
+
+// ============================================
+// GeneralSetting (Existing — Unchanged)
+// ============================================
+
+model GeneralSetting {
+  id              Int      @id @default(autoincrement())
+  siteName        String?
+  companyEmail    String?
+  companyPhone    String?
+  siteCurrency    String?  @default("USD")
+  usdToTryRate    Float?   @default(0)
+  usdToSypRate    Float?   @default(0)
+  cashboxSyp      Float?   @default(0)
+  cashboxTry      Float?   @default(0)
+  cashboxUsd      Float?   @default(0)
+  createdAt       DateTime @default(now())
+  logo            String?
+  facebookUrl     String?
+  instagramUrl    String?
+  topBannerText   String?
+  primaryColor    String?  @default("#10b981")
+  secondaryColor  String?  @default("#0f766e")
+  updatedAt       DateTime @updatedAt
+}
+
+// ============================================
+// Offer (Homepage / Marketing Offers)
+// ============================================
+
+model Offer {
+  id               String          @id @default(cuid())
+  title            String?
+  subtitle         String?
+  description      String?         @db.Text
+  badgeText        String?
+  image            String?
+  ctaText          String?
+  ctaLink          String?
+  startsAt         DateTime?
+  endsAt           DateTime?
+  countdownEndsAt  DateTime?
+  isActive         Boolean         @default(true)
+  sortOrder        Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  discounts        OfferDiscount[]
+
+  @@index([isActive, sortOrder])
+  @@index([startsAt, endsAt])
+  @@map("offers")
+}
+
+// ============================================
+// OfferDiscount (Discount Rules for Offers)
+// ============================================
+
+model OfferDiscount {
+  id               String        @id @default(cuid())
+  offerId          String
+  offer            Offer         @relation(fields: [offerId], references: [id], onDelete: Cascade)
+
+  // Optional targeting (can stay null)
+  productId        Int?
+  product          Product?      @relation(fields: [productId], references: [id], onDelete: SetNull)
+  categoryId       Int?
+  category         Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  discountType     DiscountType  @default(PERCENTAGE)
+  discountValue    Float?
+  maxDiscountValue Float?
+  minOrderAmount   Float?
+  usageLimit       Int?
+  usedCount        Int           @default(0)
+  startsAt         DateTime?
+  endsAt           DateTime?
+  isActive         Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([offerId, isActive])
+  @@index([productId])
+  @@index([categoryId])
+  @@index([startsAt, endsAt])
+  @@map("offer_discounts")
+}
+
+// ============================================
+// EmployeeSalaryAdjustment (Existing — Unchanged)
+// ============================================
+
+model EmployeeSalaryAdjustment {
+  id           String   @id @default(uuid())
+  userId       String
+  monthKey     String
+  editedSalary Float
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, monthKey])
+}
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  NEW TABLES: E-commerce Affiliate Platform                    ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// ============================================
+// AffiliateLink (NEW TABLE)
+// ============================================
+
+model AffiliateLink {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  productId       Int      @map("product_id")
+  uniqueCode      String   @unique @map("unique_code")
+  clicks          Int      @default(0)
+  conversions     Int      @default(0)
+  commissionRate  Float    @default(10.00) @map("commission_rate")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
+  commissions Commission[]
+
+  @@index([userId])
+  @@index([productId])
+  @@index([uniqueCode])
+  @@map("affiliate_links")
+}
+
+// ============================================
+// Commission (NEW TABLE)
+// ============================================
+
+model Commission {
+  id              String           @id @default(uuid())
+  affiliateLinkId String           @map("affiliate_link_id")
+  orderId         Int              @map("order_id")
+  amount          Float
+  status          CommissionStatus @default(PENDING)
+  createdAt       DateTime         @default(now()) @map("created_at")
+  paidAt          DateTime?        @map("paid_at")
+
+  // Relations
+  affiliateLink AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([affiliateLinkId])
+  @@index([orderId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("commissions")
+}

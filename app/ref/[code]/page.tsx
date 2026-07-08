@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-// import ProductPage from "@/app/product/[identifier]/page";
+import ProductPage from "@/app/product/[identifier]/page";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import AffiliateVisitTracker from "./AffiliateVisitTracker";
@@ -30,7 +30,7 @@ export default async function AffiliateRefPage({ params }: AffiliateRefPageProps
   return (
     <>
       <AffiliateVisitTracker code={code} />
-      {/* <ProductPage params={{ identifier }} /> */}
+      <ProductPage params={{ identifier }} />
     </>
   );
 }

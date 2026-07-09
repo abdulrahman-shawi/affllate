@@ -11,7 +11,6 @@ import { formatPrice } from "@/lib/currency";
 import { countries, citiesByCountry } from "@/lib/cities";
 import { MapPin, User, ShoppingBag, ChevronLeft, CheckCircle } from "lucide-react";
 import PhoneInput from "react-phone-number-input";
-import "react-phone-number-input/style.css";
 
 const MapPicker = dynamic(() => import("@/component/MapPicker"), { ssr: false });
 
@@ -366,7 +365,7 @@ export default function CheckoutPage() {
 
                 {/* Map */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
                     <MapPin size={18} className="text-pink" />
                     تحديد الموقع على الخريطة
                   </label>

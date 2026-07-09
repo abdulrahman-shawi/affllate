@@ -35,25 +35,30 @@ const defaults: GeneralSettings = {
 };
 
 export async function getGeneralSettings(): Promise<GeneralSettings> {
-  const settings = await prisma.generalSetting.findFirst({
-    orderBy: { createdAt: "desc" },
-  });
+  try {
+    const settings = await prisma.generalSetting.findFirst({
+      orderBy: { createdAt: "desc" },
+    });
 
-  if (!settings) return defaults;
+    if (!settings) return defaults;
 
-  return {
-    siteName: settings.siteName || defaults.siteName,
-    companyEmail: settings.companyEmail || defaults.companyEmail,
-    companyPhone: settings.companyPhone || defaults.companyPhone,
-    siteCurrency: settings.siteCurrency || defaults.siteCurrency,
-    usdToTryRate: settings.usdToTryRate ?? defaults.usdToTryRate,
-    facebookUrl: settings.facebookUrl || defaults.facebookUrl,
-    instagramUrl: settings.instagramUrl || defaults.instagramUrl,
-    logo: settings.logo || defaults.logo,
-    primaryColor: settings.primaryColor || defaults.primaryColor,
-    secondaryColor: settings.secondaryColor || defaults.secondaryColor,
-    topBannerText: settings.topBannerText || defaults.topBannerText,
-  };
+    return {
+      siteName: settings.siteName || defaults.siteName,
+      companyEmail: settings.companyEmail || defaults.companyEmail,
+      companyPhone: settings.companyPhone || defaults.companyPhone,
+      siteCurrency: settings.siteCurrency || defaults.siteCurrency,
+      usdToTryRate: settings.usdToTryRate ?? defaults.usdToTryRate,
+      facebookUrl: settings.facebookUrl || defaults.facebookUrl,
+      instagramUrl: settings.instagramUrl || defaults.instagramUrl,
+      logo: settings.logo || defaults.logo,
+      primaryColor: settings.primaryColor || defaults.primaryColor,
+      secondaryColor: settings.secondaryColor || defaults.secondaryColor,
+      topBannerText: settings.topBannerText || defaults.topBannerText,
+    };
+  } catch (error) {
+    console.error("Error loading general settings:", error);
+    return defaults;
+  }
 }
 
 function sanitizeFileName(fileName: string) {

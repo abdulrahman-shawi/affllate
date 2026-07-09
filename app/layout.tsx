@@ -15,6 +15,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
+  themeColor: "#7f305d",
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -64,7 +65,6 @@ export async function generateMetadata(): Promise<Metadata> {
       title: siteName,
     },
     applicationName: siteName,
-    themeColor: "#7f305d",
     robots: {
       index: true,
       follow: true,

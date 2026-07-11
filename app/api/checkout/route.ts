@@ -9,6 +9,44 @@ function generateOrderNumber(): string {
   return `ORD-${timestamp}-${random}`;
 }
 
+async function createCustomerFromCheckout(
+  tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0],
+  input: {
+    name: string;
+    phone: string;
+    country: string;
+    city: string;
+  }
+) {
+  const baseName = input.name.trim();
+  const fallbackNames = [
+    baseName,
+    `${baseName} - ${input.phone}`,
+    `${baseName} - ${input.phone.slice(-4)}`,
+  ];
+
+  for (const candidateName of fallbackNames) {
+    try {
+      return await tx.customer.create({
+        data: {
+          name: candidateName,
+          phone: [input.phone],
+          status: "المتجر",
+          phonestatus: "معلق",
+          country: input.country,
+          city: input.city,
+        },
+      });
+    } catch (createErr: any) {
+      if (createErr?.code !== "P2002") {
+        throw createErr;
+      }
+    }
+  }
+
+  throw new Error("Failed to create customer with checkout receiver name");
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -84,19 +122,8 @@ export async function POST(request: NextRequest) {
         });
       } else {
         customer = await tx.customer.findFirst({
-          where: {
-            name,
-            phone: { has: phone },
-          },
+          where: { phone: { has: phone } },
         });
-
-        if (!customer) {
-          const existingByPhone = await tx.customer.findFirst({
-            where: { phone: { has: phone } },
-          });
-          const existingByName = await tx.customer.findUnique({ where: { name } });
-          customer = existingByPhone ?? existingByName;
-        }
 
         if (customer) {
           customer = await tx.customer.update({
@@ -110,37 +137,16 @@ export async function POST(request: NextRequest) {
           });
         } else {
           try {
-            customer = await tx.customer.create({
-              data: {
-                name,
-                phone: [phone],
-                status: "المتجر",
-                phonestatus: "معلق",
-                country,
-                city,
-              },
+            customer = await createCustomerFromCheckout(tx, {
+              name,
+              phone,
+              country,
+              city,
             });
           } catch (createErr: any) {
-            if (createErr?.code === "P2002") {
-              customer = await tx.customer.findUnique({ where: { name } });
-              if (customer) {
-                customer = await tx.customer.update({
-                  where: { id: customer.id },
-                  data: {
-                    status: "المتجر",
-                    country,
-                    city,
-                    ...(!customer.phone.includes(phone) ? { phone: { push: phone } } : {}),
-                  },
-                });
-              }
-            }
-
-            if (!customer) {
-              throw new Error(
-                `Failed to create customer: ${createErr?.message || "Unknown error"}`
-              );
-            }
+            throw new Error(
+              `Failed to create customer: ${createErr?.message || "Unknown error"}`
+            );
           }
         }
       }

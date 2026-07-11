@@ -34,6 +34,8 @@ const defaults: GeneralSettings = {
   topBannerText: "",
 };
 
+let hasLoggedSettingsFallback = false;
+
 export async function getGeneralSettings(): Promise<GeneralSettings> {
   try {
     const settings = await prisma.generalSetting.findFirst({
@@ -56,7 +58,16 @@ export async function getGeneralSettings(): Promise<GeneralSettings> {
       topBannerText: settings.topBannerText || defaults.topBannerText,
     };
   } catch (error) {
-    console.error("Error loading general settings:", error);
+    if (!hasLoggedSettingsFallback) {
+      hasLoggedSettingsFallback = true;
+      const code =
+        typeof error === "object" && error && "code" in error
+          ? String((error as { code?: string }).code)
+          : "unknown";
+      console.warn(
+        `Falling back to default general settings because Prisma is unavailable (${code}).`
+      );
+    }
     return defaults;
   }
 }

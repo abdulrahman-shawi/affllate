@@ -39,6 +39,8 @@ interface DashboardData {
   links: any[];
 }
 
+const AFFILIATE_BASE_URL = "https://www.skynova-tr.com";
+
 export default function AffiliateDashboardPage() {
   const router = useRouter();
   const { siteCurrency, usdToTryRate } = useSettings();
@@ -78,7 +80,7 @@ export default function AffiliateDashboardPage() {
   };
 
   const handleCopy = (code: string) => {
-    const url = `${window.location.origin}/ref/${code}`;
+    const url = `${AFFILIATE_BASE_URL}/ref/${code}`;
     navigator.clipboard.writeText(url);
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(null), 2000);

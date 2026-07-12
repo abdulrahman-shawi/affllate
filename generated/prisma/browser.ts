@@ -162,3 +162,8 @@ export type AffiliateLink = Prisma.AffiliateLinkModel
  * 
  */
 export type Commission = Prisma.CommissionModel
+/**
+ * Model AffiliateWalletTransfer
+ * 
+ */
+export type AffiliateWalletTransfer = Prisma.AffiliateWalletTransferModel

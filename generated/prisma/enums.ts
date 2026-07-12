@@ -104,6 +104,14 @@ export const CommissionStatus = {
 export type CommissionStatus = (typeof CommissionStatus)[keyof typeof CommissionStatus]
 
 
+export const WalletTransferStatus = {
+  PENDING: 'PENDING',
+  RECEIVED: 'RECEIVED'
+} as const
+
+export type WalletTransferStatus = (typeof WalletTransferStatus)[keyof typeof WalletTransferStatus]
+
+
 export const DiscountType = {
   PERCENTAGE: 'PERCENTAGE',
   FIXED: 'FIXED'

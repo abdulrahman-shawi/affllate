@@ -412,7 +412,8 @@ export const ModelName = {
   OfferDiscount: 'OfferDiscount',
   EmployeeSalaryAdjustment: 'EmployeeSalaryAdjustment',
   AffiliateLink: 'AffiliateLink',
-  Commission: 'Commission'
+  Commission: 'Commission',
+  AffiliateWalletTransfer: 'AffiliateWalletTransfer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "permission" | "category" | "product" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "page" | "heroSlide" | "generalSetting" | "offer" | "offerDiscount" | "employeeSalaryAdjustment" | "affiliateLink" | "commission"
+    modelProps: "user" | "permission" | "category" | "product" | "productLandingPage" | "review" | "warehouse" | "productStock" | "stockMovement" | "userTarget" | "userActivityTarget" | "targetProduct" | "productImage" | "customer" | "warranty" | "message" | "order" | "expense" | "shipping" | "orderItem" | "trakingCompany" | "page" | "heroSlide" | "generalSetting" | "offer" | "offerDiscount" | "employeeSalaryAdjustment" | "affiliateLink" | "commission" | "affiliateWalletTransfer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2578,6 +2579,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AffiliateWalletTransfer: {
+      payload: Prisma.$AffiliateWalletTransferPayload<ExtArgs>
+      fields: Prisma.AffiliateWalletTransferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AffiliateWalletTransferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AffiliateWalletTransferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+        }
+        findFirst: {
+          args: Prisma.AffiliateWalletTransferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AffiliateWalletTransferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+        }
+        findMany: {
+          args: Prisma.AffiliateWalletTransferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>[]
+        }
+        create: {
+          args: Prisma.AffiliateWalletTransferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+        }
+        createMany: {
+          args: Prisma.AffiliateWalletTransferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AffiliateWalletTransferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>[]
+        }
+        delete: {
+          args: Prisma.AffiliateWalletTransferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+        }
+        update: {
+          args: Prisma.AffiliateWalletTransferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+        }
+        deleteMany: {
+          args: Prisma.AffiliateWalletTransferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AffiliateWalletTransferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AffiliateWalletTransferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>[]
+        }
+        upsert: {
+          args: Prisma.AffiliateWalletTransferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AffiliateWalletTransferPayload>
+        }
+        aggregate: {
+          args: Prisma.AffiliateWalletTransferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAffiliateWalletTransfer>
+        }
+        groupBy: {
+          args: Prisma.AffiliateWalletTransferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AffiliateWalletTransferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AffiliateWalletTransferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AffiliateWalletTransferCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3134,6 +3209,22 @@ export const CommissionScalarFieldEnum = {
 export type CommissionScalarFieldEnum = (typeof CommissionScalarFieldEnum)[keyof typeof CommissionScalarFieldEnum]
 
 
+export const AffiliateWalletTransferScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  status: 'status',
+  reference: 'reference',
+  notes: 'notes',
+  transferredAt: 'transferredAt',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AffiliateWalletTransferScalarFieldEnum = (typeof AffiliateWalletTransferScalarFieldEnum)[keyof typeof AffiliateWalletTransferScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3397,6 +3488,20 @@ export type EnumCommissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 export type ListEnumCommissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommissionStatus[]'>
     
 
+
+/**
+ * Reference to a field of type 'WalletTransferStatus'
+ */
+export type EnumWalletTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WalletTransferStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'WalletTransferStatus[]'
+ */
+export type ListEnumWalletTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WalletTransferStatus[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -3536,6 +3641,7 @@ export type GlobalOmitConfig = {
   employeeSalaryAdjustment?: Prisma.EmployeeSalaryAdjustmentOmit
   affiliateLink?: Prisma.AffiliateLinkOmit
   commission?: Prisma.CommissionOmit
+  affiliateWalletTransfer?: Prisma.AffiliateWalletTransferOmit
 }
 
 /* Types for Logging */

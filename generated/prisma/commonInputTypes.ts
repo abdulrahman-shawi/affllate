@@ -460,6 +460,23 @@ export type EnumCommissionStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumCommissionStatusFilter<$PrismaModel>
 }
 
+export type EnumWalletTransferStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.WalletTransferStatus | Prisma.EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWalletTransferStatusFilter<$PrismaModel> | $Enums.WalletTransferStatus
+}
+
+export type EnumWalletTransferStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WalletTransferStatus | Prisma.EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWalletTransferStatusWithAggregatesFilter<$PrismaModel> | $Enums.WalletTransferStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWalletTransferStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWalletTransferStatusFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -868,6 +885,23 @@ export type NestedEnumCommissionStatusWithAggregatesFilter<$PrismaModel = never>
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCommissionStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCommissionStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumWalletTransferStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.WalletTransferStatus | Prisma.EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWalletTransferStatusFilter<$PrismaModel> | $Enums.WalletTransferStatus
+}
+
+export type NestedEnumWalletTransferStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WalletTransferStatus | Prisma.EnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WalletTransferStatus[] | Prisma.ListEnumWalletTransferStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWalletTransferStatusWithAggregatesFilter<$PrismaModel> | $Enums.WalletTransferStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWalletTransferStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWalletTransferStatusFilter<$PrismaModel>
 }
 
 

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { signToken, verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
+import type { Prisma } from "@/generated/prisma/client";
 
 export interface AffiliateUser {
   id: string;
@@ -11,6 +12,57 @@ export interface AffiliateUser {
   email: string;
   phone: string | null;
   token: string;
+}
+
+type AffiliateLinkDashboardRow = Prisma.AffiliateLinkGetPayload<{
+  include: {
+    product: { select: { name: true } };
+    _count: { select: { commissions: true } };
+  };
+}>;
+
+type CommissionDashboardRow = Prisma.CommissionGetPayload<{
+  include: {
+    order: { select: { status: true } };
+  };
+}>;
+
+type WalletTransferRecord = {
+  id: string;
+  userId: string;
+  amount: number;
+  status: "PENDING" | "RECEIVED";
+  reference: string | null;
+  notes: string | null;
+  transferredAt: Date;
+  receivedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+function isMissingWalletTransfersTableError(error: any): boolean {
+  const message = String(error?.message ?? "");
+  return error?.code === "P2021" || message.includes("affiliate_wallet_transfers");
+}
+
+async function getAffiliateWalletTransfersSafe(userId: string) {
+  try {
+    const walletTransferDelegate = (prisma as any).affiliateWalletTransfer;
+    if (!walletTransferDelegate) {
+      return [] as WalletTransferRecord[];
+    }
+
+    return await walletTransferDelegate.findMany({
+      where: { userId },
+      orderBy: { transferredAt: "desc" },
+    }) as WalletTransferRecord[];
+  } catch (error: any) {
+    if (isMissingWalletTransfersTableError(error)) {
+      return [];
+    }
+
+    throw error;
+  }
 }
 
 function generateAffiliateCode(): string {
@@ -221,58 +273,75 @@ export async function getAffiliateLinks(userId: string) {
   return links.map(({ _count, ...link }) => ({
     ...link,
     conversions: _count.commissions,
+    conversionRate: link.clicks > 0 ? (_count.commissions / link.clicks) * 100 : 0,
   }));
 }
 
 // ─── 5. Get Dashboard Stats ───
 export async function getAffiliateDashboard(userId: string) {
-  const links = await prisma.affiliateLink.findMany({
-    where: { userId },
-    include: {
-      product: { select: { name: true } },
-      _count: { select: { commissions: true } },
-    },
-  });
-
-  const commissions = await prisma.commission.findMany({
-    where: {
-      affiliateLink: { userId },
-    },
-    include: {
-      order: {
-        select: {
-          status: true,
+  const [links, commissions, walletTransfers]: [
+    AffiliateLinkDashboardRow[],
+    CommissionDashboardRow[],
+    WalletTransferRecord[],
+  ] = await Promise.all([
+    prisma.affiliateLink.findMany({
+      where: { userId },
+      include: {
+        product: { select: { name: true } },
+        _count: { select: { commissions: true } },
+      },
+    }),
+    prisma.commission.findMany({
+      where: {
+        affiliateLink: { userId },
+      },
+      include: {
+        order: {
+          select: {
+            status: true,
+          },
         },
       },
-    },
-  });
+    }),
+    getAffiliateWalletTransfersSafe(userId),
+  ]);
 
-  const totalClicks = links.reduce((sum, l) => sum + l.clicks, 0);
-  const orderedReferralIds = new Set(commissions.map((commission) => commission.orderId));
+  const totalClicks = links.reduce((sum: number, link: AffiliateLinkDashboardRow) => sum + link.clicks, 0);
+  const orderedReferralIds = new Set(commissions.map((commission: CommissionDashboardRow) => commission.orderId));
   const totalConversions = orderedReferralIds.size;
-  const successfulReferrals = commissions.filter((commission) =>
+  const aggregateConversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+  const successfulReferrals = commissions.filter((commission: CommissionDashboardRow) =>
     isSuccessfulOrderStatus(commission.order?.status)
   ).length;
-  const totalCommissions = commissions.reduce((sum, c) => sum + c.amount, 0);
+  const totalCommissions = commissions.reduce((sum: number, commission: CommissionDashboardRow) => sum + commission.amount, 0);
   const pendingCommissions = commissions
-    .filter((c) => c.status === "PENDING")
-    .reduce((sum, c) => sum + c.amount, 0);
+    .filter((commission: CommissionDashboardRow) => commission.status === "PENDING")
+    .reduce((sum: number, commission: CommissionDashboardRow) => sum + commission.amount, 0);
   const paidCommissions = commissions
-    .filter((c) => c.status === "PAID")
-    .reduce((sum, c) => sum + c.amount, 0);
+    .filter((commission: CommissionDashboardRow) => commission.status === "PAID")
+    .reduce((sum: number, commission: CommissionDashboardRow) => sum + commission.amount, 0);
   const potentialCommissions = commissions
-    .filter((c) => isPotentialOrderStatus(c.order?.status))
-    .reduce((sum, c) => sum + c.amount, 0);
+    .filter((commission: CommissionDashboardRow) => isPotentialOrderStatus(commission.order?.status))
+    .reduce((sum: number, commission: CommissionDashboardRow) => sum + commission.amount, 0);
   const confirmedCommissions = commissions
-    .filter((c) => isConfirmedOrderStatus(c.order?.status))
-    .reduce((sum, c) => sum + c.amount, 0);
+    .filter((commission: CommissionDashboardRow) => isConfirmedOrderStatus(commission.order?.status))
+    .reduce((sum: number, commission: CommissionDashboardRow) => sum + commission.amount, 0);
   const lostCommissions = commissions
-    .filter((c) => isLostOrderStatus(c.order?.status))
-    .reduce((sum, c) => sum + c.amount, 0);
+    .filter((commission: CommissionDashboardRow) => isLostOrderStatus(commission.order?.status))
+    .reduce((sum: number, commission: CommissionDashboardRow) => sum + commission.amount, 0);
+  const pendingWalletTransfers = walletTransfers
+    .filter((transfer: WalletTransferRecord) => transfer.status === "PENDING")
+    .reduce((sum: number, transfer: WalletTransferRecord) => sum + transfer.amount, 0);
+  const receivedWalletTransfers = walletTransfers
+    .filter((transfer: WalletTransferRecord) => transfer.status === "RECEIVED")
+    .reduce((sum: number, transfer: WalletTransferRecord) => sum + transfer.amount, 0);
+  const totalWalletTransfers = pendingWalletTransfers + receivedWalletTransfers;
+  const walletBalance = Math.max(confirmedCommissions - totalWalletTransfers, 0);
 
   return {
     totalClicks,
     totalConversions,
+    aggregateConversionRate,
     successfulReferrals,
     totalCommissions,
     pendingCommissions,
@@ -281,6 +350,13 @@ export async function getAffiliateDashboard(userId: string) {
     confirmedCommissions,
     lostCommissions,
     linksCount: links.length,
+    wallet: {
+      balance: walletBalance,
+      pendingTransfers: pendingWalletTransfers,
+      receivedTransfers: receivedWalletTransfers,
+      totalTransferred: totalWalletTransfers,
+      transferCount: walletTransfers.length,
+    },
     links,
   };
 }
@@ -300,6 +376,40 @@ export async function getAffiliateCommissions(userId: string) {
       order: { select: { orderNumber: true, createdAt: true, status: true } },
     },
     orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getAffiliateWalletTransfers(userId: string) {
+  return getAffiliateWalletTransfersSafe(userId);
+}
+
+export async function recordAffiliateWalletTransfer(input: {
+  userId: string;
+  amount: number;
+  reference?: string;
+  notes?: string;
+  status?: "PENDING" | "RECEIVED";
+  transferredAt?: Date;
+  receivedAt?: Date | null;
+}) {
+  const walletTransferDelegate = (prisma as any).affiliateWalletTransfer;
+  if (!walletTransferDelegate) {
+    throw new Error("Affiliate wallet transfer delegate is unavailable");
+  }
+
+  return walletTransferDelegate.create({
+    data: {
+      userId: input.userId,
+      amount: input.amount,
+      reference: input.reference,
+      notes: input.notes,
+      status: input.status ?? "PENDING",
+      transferredAt: input.transferredAt ?? new Date(),
+      receivedAt:
+        input.status === "RECEIVED"
+          ? input.receivedAt ?? new Date()
+          : input.receivedAt ?? null,
+    },
   });
 }
 

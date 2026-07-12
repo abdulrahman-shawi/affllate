@@ -352,6 +352,7 @@ export type UserWhereInput = {
   expenses?: Prisma.ExpenseListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
   affiliateLinks?: Prisma.AffiliateLinkListRelationFilter
+  walletTransfers?: Prisma.AffiliateWalletTransferListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
 }
 
@@ -388,6 +389,7 @@ export type UserOrderByWithRelationInput = {
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   stockMovements?: Prisma.StockMovementOrderByRelationAggregateInput
   affiliateLinks?: Prisma.AffiliateLinkOrderByRelationAggregateInput
+  walletTransfers?: Prisma.AffiliateWalletTransferOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
 }
 
@@ -427,6 +429,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   expenses?: Prisma.ExpenseListRelationFilter
   stockMovements?: Prisma.StockMovementListRelationFilter
   affiliateLinks?: Prisma.AffiliateLinkListRelationFilter
+  walletTransfers?: Prisma.AffiliateWalletTransferListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
 }, "id" | "email" | "affiliateCode">
 
@@ -515,6 +518,7 @@ export type UserCreateInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -549,6 +553,7 @@ export type UserUncheckedCreateInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -583,6 +588,7 @@ export type UserUpdateInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -617,6 +623,7 @@ export type UserUncheckedUpdateInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1098,6 +1105,20 @@ export type UserUpdateOneRequiredWithoutAffiliateLinksNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAffiliateLinksInput, Prisma.UserUpdateWithoutAffiliateLinksInput>, Prisma.UserUncheckedUpdateWithoutAffiliateLinksInput>
 }
 
+export type UserCreateNestedOneWithoutWalletTransfersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWalletTransfersInput, Prisma.UserUncheckedCreateWithoutWalletTransfersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWalletTransfersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWalletTransfersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWalletTransfersInput, Prisma.UserUncheckedCreateWithoutWalletTransfersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWalletTransfersInput
+  upsert?: Prisma.UserUpsertWithoutWalletTransfersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWalletTransfersInput, Prisma.UserUpdateWithoutWalletTransfersInput>, Prisma.UserUncheckedUpdateWithoutWalletTransfersInput>
+}
+
 export type UserCreateWithoutSubordinatesInput = {
   id?: string
   username: string
@@ -1128,6 +1149,7 @@ export type UserCreateWithoutSubordinatesInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -1161,6 +1183,7 @@ export type UserUncheckedCreateWithoutSubordinatesInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1199,6 +1222,7 @@ export type UserCreateWithoutParentInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -1232,6 +1256,7 @@ export type UserUncheckedCreateWithoutParentInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1286,6 +1311,7 @@ export type UserUpdateWithoutSubordinatesInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -1319,6 +1345,7 @@ export type UserUncheckedUpdateWithoutSubordinatesInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1394,6 +1421,7 @@ export type UserCreateWithoutPermissionInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -1427,6 +1455,7 @@ export type UserUncheckedCreateWithoutPermissionInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1487,6 +1516,7 @@ export type UserCreateWithoutReviewsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsInput = {
@@ -1520,6 +1550,7 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsInput = {
@@ -1569,6 +1600,7 @@ export type UserUpdateWithoutReviewsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -1602,6 +1634,7 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutStockMovementsInput = {
@@ -1634,6 +1667,7 @@ export type UserCreateWithoutStockMovementsInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -1667,6 +1701,7 @@ export type UserUncheckedCreateWithoutStockMovementsInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1716,6 +1751,7 @@ export type UserUpdateWithoutStockMovementsInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -1749,6 +1785,7 @@ export type UserUncheckedUpdateWithoutStockMovementsInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1782,6 +1819,7 @@ export type UserCreateWithoutTargetsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -1815,6 +1853,7 @@ export type UserUncheckedCreateWithoutTargetsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1864,6 +1903,7 @@ export type UserUpdateWithoutTargetsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -1897,6 +1937,7 @@ export type UserUncheckedUpdateWithoutTargetsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1930,6 +1971,7 @@ export type UserCreateWithoutActivityTargetsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -1963,6 +2005,7 @@ export type UserUncheckedCreateWithoutActivityTargetsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -2012,6 +2055,7 @@ export type UserUpdateWithoutActivityTargetsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -2045,6 +2089,7 @@ export type UserUncheckedUpdateWithoutActivityTargetsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -2078,6 +2123,7 @@ export type UserCreateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -2111,6 +2157,7 @@ export type UserUncheckedCreateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -2165,6 +2212,7 @@ export type UserCreateWithoutMessageInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -2198,6 +2246,7 @@ export type UserUncheckedCreateWithoutMessageInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -2247,6 +2296,7 @@ export type UserUpdateWithoutMessageInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -2280,6 +2330,7 @@ export type UserUncheckedUpdateWithoutMessageInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -2313,6 +2364,7 @@ export type UserCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -2346,6 +2398,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -2395,6 +2448,7 @@ export type UserUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -2428,6 +2482,7 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -2461,6 +2516,7 @@ export type UserCreateWithoutExpensesInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -2494,6 +2550,7 @@ export type UserUncheckedCreateWithoutExpensesInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -2543,6 +2600,7 @@ export type UserUpdateWithoutExpensesInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -2576,6 +2634,7 @@ export type UserUncheckedUpdateWithoutExpensesInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -2609,6 +2668,7 @@ export type UserCreateWithoutSalaryAdjustmentsInput = {
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -2642,6 +2702,7 @@ export type UserUncheckedCreateWithoutSalaryAdjustmentsInput = {
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -2691,6 +2752,7 @@ export type UserUpdateWithoutSalaryAdjustmentsInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -2724,6 +2786,7 @@ export type UserUncheckedUpdateWithoutSalaryAdjustmentsInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -2757,6 +2820,7 @@ export type UserCreateWithoutAffiliateLinksInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
 }
 
@@ -2790,6 +2854,7 @@ export type UserUncheckedCreateWithoutAffiliateLinksInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
   stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -2839,6 +2904,7 @@ export type UserUpdateWithoutAffiliateLinksInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -2872,6 +2938,159 @@ export type UserUncheckedUpdateWithoutAffiliateLinksInput = {
   salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWalletTransfersInput = {
+  id?: string
+  username: string
+  email: string
+  phone?: string | null
+  notes?: string | null
+  jobTitle?: string | null
+  avatar?: string | null
+  accountType?: $Enums.AccountType
+  password: string
+  salesCommissionPercent?: number
+  wage?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isAffiliate?: boolean
+  affiliateApproved?: boolean
+  affiliateCode?: string | null
+  affiliateRequestedAt?: Date | string | null
+  affiliateApprovedAt?: Date | string | null
+  parent?: Prisma.UserCreateNestedOneWithoutSubordinatesInput
+  subordinates?: Prisma.UserCreateNestedManyWithoutParentInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  permission?: Prisma.PermissionCreateNestedOneWithoutUsersInput
+  customers?: Prisma.CustomerCreateNestedManyWithoutUsersInput
+  message?: Prisma.MessageCreateNestedManyWithoutUserInput
+  targets?: Prisma.UserTargetCreateNestedManyWithoutUserInput
+  activityTargets?: Prisma.UserActivityTargetCreateNestedManyWithoutUserInput
+  salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentCreateNestedManyWithoutUserInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutEmployeeInput
+  stockMovements?: Prisma.StockMovementCreateNestedManyWithoutUserInput
+  affiliateLinks?: Prisma.AffiliateLinkCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWalletTransfersInput = {
+  id?: string
+  username: string
+  email: string
+  phone?: string | null
+  notes?: string | null
+  jobTitle?: string | null
+  avatar?: string | null
+  accountType?: $Enums.AccountType
+  password: string
+  salesCommissionPercent?: number
+  wage?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  permissionId?: string | null
+  parentId?: string | null
+  isAffiliate?: boolean
+  affiliateApproved?: boolean
+  affiliateCode?: string | null
+  affiliateRequestedAt?: Date | string | null
+  affiliateApprovedAt?: Date | string | null
+  subordinates?: Prisma.UserUncheckedCreateNestedManyWithoutParentInput
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  customers?: Prisma.CustomerUncheckedCreateNestedManyWithoutUsersInput
+  message?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
+  targets?: Prisma.UserTargetUncheckedCreateNestedManyWithoutUserInput
+  activityTargets?: Prisma.UserActivityTargetUncheckedCreateNestedManyWithoutUserInput
+  salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedCreateNestedManyWithoutUserInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutEmployeeInput
+  stockMovements?: Prisma.StockMovementUncheckedCreateNestedManyWithoutUserInput
+  affiliateLinks?: Prisma.AffiliateLinkUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWalletTransfersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWalletTransfersInput, Prisma.UserUncheckedCreateWithoutWalletTransfersInput>
+}
+
+export type UserUpsertWithoutWalletTransfersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWalletTransfersInput, Prisma.UserUncheckedUpdateWithoutWalletTransfersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWalletTransfersInput, Prisma.UserUncheckedCreateWithoutWalletTransfersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWalletTransfersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWalletTransfersInput, Prisma.UserUncheckedUpdateWithoutWalletTransfersInput>
+}
+
+export type UserUpdateWithoutWalletTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  salesCommissionPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  wage?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isAffiliate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  affiliateApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  affiliateCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  affiliateRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  affiliateApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parent?: Prisma.UserUpdateOneWithoutSubordinatesNestedInput
+  subordinates?: Prisma.UserUpdateManyWithoutParentNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  permission?: Prisma.PermissionUpdateOneWithoutUsersNestedInput
+  customers?: Prisma.CustomerUpdateManyWithoutUsersNestedInput
+  message?: Prisma.MessageUpdateManyWithoutUserNestedInput
+  targets?: Prisma.UserTargetUpdateManyWithoutUserNestedInput
+  activityTargets?: Prisma.UserActivityTargetUpdateManyWithoutUserNestedInput
+  salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUpdateManyWithoutUserNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
+  affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWalletTransfersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jobTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountType?: Prisma.EnumAccountTypeFieldUpdateOperationsInput | $Enums.AccountType
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  salesCommissionPercent?: Prisma.FloatFieldUpdateOperationsInput | number
+  wage?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  permissionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isAffiliate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  affiliateApproved?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  affiliateCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  affiliateRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  affiliateApprovedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  subordinates?: Prisma.UserUncheckedUpdateManyWithoutParentNestedInput
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  customers?: Prisma.CustomerUncheckedUpdateManyWithoutUsersNestedInput
+  message?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
+  targets?: Prisma.UserTargetUncheckedUpdateManyWithoutUserNestedInput
+  activityTargets?: Prisma.UserActivityTargetUncheckedUpdateManyWithoutUserNestedInput
+  salaryAdjustments?: Prisma.EmployeeSalaryAdjustmentUncheckedUpdateManyWithoutUserNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
+  stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
+  affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -2927,6 +3146,7 @@ export type UserUpdateWithoutParentInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -2960,6 +3180,7 @@ export type UserUncheckedUpdateWithoutParentInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -3037,6 +3258,7 @@ export type UserUpdateWithoutPermissionInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -3070,6 +3292,7 @@ export type UserUncheckedUpdateWithoutPermissionInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -3125,6 +3348,7 @@ export type UserUpdateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutUserNestedInput
 }
 
@@ -3158,6 +3382,7 @@ export type UserUncheckedUpdateWithoutCustomersInput = {
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutEmployeeNestedInput
   stockMovements?: Prisma.StockMovementUncheckedUpdateManyWithoutUserNestedInput
   affiliateLinks?: Prisma.AffiliateLinkUncheckedUpdateManyWithoutUserNestedInput
+  walletTransfers?: Prisma.AffiliateWalletTransferUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -3200,6 +3425,7 @@ export type UserCountOutputType = {
   expenses: number
   stockMovements: number
   affiliateLinks: number
+  walletTransfers: number
   reviews: number
 }
 
@@ -3214,6 +3440,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   expenses?: boolean | UserCountOutputTypeCountExpensesArgs
   stockMovements?: boolean | UserCountOutputTypeCountStockMovementsArgs
   affiliateLinks?: boolean | UserCountOutputTypeCountAffiliateLinksArgs
+  walletTransfers?: boolean | UserCountOutputTypeCountWalletTransfersArgs
   reviews?: boolean | UserCountOutputTypeCountReviewsArgs
 }
 
@@ -3300,6 +3527,13 @@ export type UserCountOutputTypeCountAffiliateLinksArgs<ExtArgs extends runtime.T
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountWalletTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AffiliateWalletTransferWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ReviewWhereInput
 }
@@ -3338,6 +3572,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.User$stockMovementsArgs<ExtArgs>
   affiliateLinks?: boolean | Prisma.User$affiliateLinksArgs<ExtArgs>
+  walletTransfers?: boolean | Prisma.User$walletTransfersArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -3429,6 +3664,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   stockMovements?: boolean | Prisma.User$stockMovementsArgs<ExtArgs>
   affiliateLinks?: boolean | Prisma.User$affiliateLinksArgs<ExtArgs>
+  walletTransfers?: boolean | Prisma.User$walletTransfersArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -3456,6 +3692,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     stockMovements: Prisma.$StockMovementPayload<ExtArgs>[]
     affiliateLinks: Prisma.$AffiliateLinkPayload<ExtArgs>[]
+    walletTransfers: Prisma.$AffiliateWalletTransferPayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -3885,6 +4122,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   expenses<T extends Prisma.User$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   stockMovements<T extends Prisma.User$stockMovementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$stockMovementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   affiliateLinks<T extends Prisma.User$affiliateLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$affiliateLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AffiliateLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  walletTransfers<T extends Prisma.User$walletTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$walletTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AffiliateWalletTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4611,6 +4849,30 @@ export type User$affiliateLinksArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.AffiliateLinkScalarFieldEnum | Prisma.AffiliateLinkScalarFieldEnum[]
+}
+
+/**
+ * User.walletTransfers
+ */
+export type User$walletTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AffiliateWalletTransfer
+   */
+  select?: Prisma.AffiliateWalletTransferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AffiliateWalletTransfer
+   */
+  omit?: Prisma.AffiliateWalletTransferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AffiliateWalletTransferInclude<ExtArgs> | null
+  where?: Prisma.AffiliateWalletTransferWhereInput
+  orderBy?: Prisma.AffiliateWalletTransferOrderByWithRelationInput | Prisma.AffiliateWalletTransferOrderByWithRelationInput[]
+  cursor?: Prisma.AffiliateWalletTransferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AffiliateWalletTransferScalarFieldEnum | Prisma.AffiliateWalletTransferScalarFieldEnum[]
 }
 
 /**

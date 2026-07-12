@@ -7,6 +7,7 @@ import {
   getAffiliateDashboard,
   getAffiliateLinks,
   getAffiliateCommissions,
+  getAffiliateWalletTransfers,
 } from "@/server/affiliate";
 import type { AffiliateUser } from "@/server/affiliate";
 import {
@@ -28,6 +29,7 @@ import { formatPrice } from "@/lib/currency";
 interface DashboardData {
   totalClicks: number;
   totalConversions: number;
+  aggregateConversionRate: number;
   successfulReferrals: number;
   totalCommissions: number;
   pendingCommissions: number;
@@ -36,7 +38,24 @@ interface DashboardData {
   confirmedCommissions: number;
   lostCommissions: number;
   linksCount: number;
+  wallet: {
+    balance: number;
+    pendingTransfers: number;
+    receivedTransfers: number;
+    totalTransferred: number;
+    transferCount: number;
+  };
   links: any[];
+}
+
+interface WalletTransferData {
+  id: string;
+  amount: number;
+  status: "PENDING" | "RECEIVED";
+  reference: string | null;
+  notes: string | null;
+  transferredAt: string;
+  receivedAt: string | null;
 }
 
 const AFFILIATE_BASE_URL = "https://www.skynova-tr.com";
@@ -48,6 +67,7 @@ export default function AffiliateDashboardPage() {
   const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [commissions, setCommissions] = useState<any[]>([]);
   const [links, setLinks] = useState<any[]>([]);
+  const [walletTransfers, setWalletTransfers] = useState<WalletTransferData[]>([]);
   const [loading, setLoading] = useState(true);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
@@ -68,14 +88,30 @@ export default function AffiliateDashboardPage() {
   const loadDashboard = async () => {
     if (!user) return;
     setLoading(true);
-    const [dash, linksData, comms] = await Promise.all([
+    const [dash, linksData, comms, transfers] = await Promise.all([
       getAffiliateDashboard(user.id),
       getAffiliateLinks(user.id),
       getAffiliateCommissions(user.id),
+      getAffiliateWalletTransfers(user.id),
     ]);
     setDashboard(dash);
     setLinks(linksData);
     setCommissions(comms);
+    setWalletTransfers(
+      (transfers as Array<{
+        id: string;
+        amount: number;
+        status: "PENDING" | "RECEIVED";
+        reference: string | null;
+        notes: string | null;
+        transferredAt: Date;
+        receivedAt: Date | null;
+      }>).map((transfer) => ({
+        ...transfer,
+        transferredAt: transfer.transferredAt.toISOString(),
+        receivedAt: transfer.receivedAt?.toISOString() ?? null,
+      }))
+    );
     setLoading(false);
   };
 
@@ -136,7 +172,7 @@ export default function AffiliateDashboardPage() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Stats Cards */}
         {dashboard && (
-          <div className="grid grid-cols-2 gap-4 mb-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
+          <div className="grid grid-cols-2 gap-4 mb-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
             <StatCard
               icon={<MousePointerClick size={20} />}
               label="النقرات"
@@ -148,6 +184,12 @@ export default function AffiliateDashboardPage() {
               label="الإحالات المطلوبة"
               value={dashboard.totalConversions}
               color="green"
+            />
+            <StatCard
+              icon={<BarChart3 size={20} />}
+              label="نسبة التحويل"
+              value={`${dashboard.aggregateConversionRate.toFixed(1)}%`}
+              color="blue"
             />
             <StatCard
               icon={<CheckCircle size={20} />}
@@ -172,6 +214,18 @@ export default function AffiliateDashboardPage() {
               label="العمولات المؤكدة"
               value={formatPrice(dashboard.confirmedCommissions, siteCurrency, usdToTryRate)}
               color="green"
+            />
+            <StatCard
+              icon={<DollarSign size={20} />}
+              label="رصيد المحفظة"
+              value={formatPrice(dashboard.wallet.balance, siteCurrency, usdToTryRate)}
+              color="teal"
+            />
+            <StatCard
+              icon={<Clock size={20} />}
+              label="محول ولم يُستلم"
+              value={formatPrice(dashboard.wallet.pendingTransfers, siteCurrency, usdToTryRate)}
+              color="orange"
             />
             <StatCard
               icon={<XCircle size={20} />}
@@ -202,7 +256,8 @@ export default function AffiliateDashboardPage() {
                     <th className="text-right py-3 px-2">الكود</th>
                     <th className="text-right py-3 px-2">النقرات</th>
                     <th className="text-right py-3 px-2">التحويلات</th>
-                    <th className="text-right py-3 px-2">النسبة</th>
+                    <th className="text-right py-3 px-2">نسبة التحويل</th>
+                    <th className="text-right py-3 px-2">نسبة العمولة</th>
                     <th className="text-right py-3 px-2"></th>
                   </tr>
                 </thead>
@@ -213,6 +268,7 @@ export default function AffiliateDashboardPage() {
                       <td className="py-3 px-2 font-mono text-xs">{link.uniqueCode}</td>
                       <td className="py-3 px-2">{link.clicks}</td>
                       <td className="py-3 px-2">{link.conversions}</td>
+                      <td className="py-3 px-2">{Number(link.conversionRate ?? 0).toFixed(1)}%</td>
                       <td className="py-3 px-2">{link.commissionRate}%</td>
                       <td className="py-3 px-2">
                         <button
@@ -226,6 +282,79 @@ export default function AffiliateDashboardPage() {
                             <Copy size={16} />
                           )}
                         </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm p-6 mb-8">
+          <h2 className="text-lg font-bold text-gray-dark mb-6 flex items-center gap-2">
+            <DollarSign size={20} className="text-pink" />
+            المحفظة
+          </h2>
+
+          {dashboard && (
+            <div className="grid gap-4 mb-6 md:grid-cols-4">
+              <WalletCard
+                label="الرصيد المتاح"
+                value={formatPrice(dashboard.wallet.balance, siteCurrency, usdToTryRate)}
+                tone="teal"
+              />
+              <WalletCard
+                label="تم تحويله ولم يُستلم"
+                value={formatPrice(dashboard.wallet.pendingTransfers, siteCurrency, usdToTryRate)}
+                tone="orange"
+              />
+              <WalletCard
+                label="تم استلامه"
+                value={formatPrice(dashboard.wallet.receivedTransfers, siteCurrency, usdToTryRate)}
+                tone="green"
+              />
+              <WalletCard
+                label="عدد التحويلات"
+                value={dashboard.wallet.transferCount}
+                tone="blue"
+              />
+            </div>
+          )}
+
+          {walletTransfers.length === 0 ? (
+            <p className="text-gray-400 text-center py-8">لا توجد تحويلات محفوظة في المحفظة بعد</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 text-gray-500">
+                    <th className="text-right py-3 px-2">المبلغ</th>
+                    <th className="text-right py-3 px-2">الحالة</th>
+                    <th className="text-right py-3 px-2">المرجع</th>
+                    <th className="text-right py-3 px-2">الملاحظات</th>
+                    <th className="text-right py-3 px-2">تاريخ التحويل</th>
+                    <th className="text-right py-3 px-2">تاريخ الاستلام</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {walletTransfers.map((transfer) => (
+                    <tr key={transfer.id} className="border-b border-gray-50 hover:bg-gray-50">
+                      <td className="py-3 px-2 font-bold">
+                        {formatPrice(transfer.amount, siteCurrency, usdToTryRate)}
+                      </td>
+                      <td className="py-3 px-2">
+                        <WalletTransferStatusBadge status={transfer.status} />
+                      </td>
+                      <td className="py-3 px-2">{transfer.reference ?? "—"}</td>
+                      <td className="py-3 px-2">{transfer.notes ?? "—"}</td>
+                      <td className="py-3 px-2 text-gray-400 text-xs">
+                        {new Date(transfer.transferredAt).toLocaleDateString("ar-SA")}
+                      </td>
+                      <td className="py-3 px-2 text-gray-400 text-xs">
+                        {transfer.receivedAt
+                          ? new Date(transfer.receivedAt).toLocaleDateString("ar-SA")
+                          : "—"}
                       </td>
                     </tr>
                   ))}
@@ -277,6 +406,32 @@ export default function AffiliateDashboardPage() {
         </div>
       </main>
 
+    </div>
+  );
+}
+
+function WalletCard({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string | number;
+  tone: "blue" | "green" | "orange" | "teal";
+}) {
+  const tones = {
+    blue: "bg-blue-50 text-blue-600",
+    green: "bg-green-50 text-green-600",
+    orange: "bg-orange-50 text-orange-600",
+    teal: "bg-teal-50 text-teal-600",
+  };
+
+  return (
+    <div className="rounded-2xl border border-gray-100 p-4">
+      <div className={`inline-flex rounded-xl px-3 py-1 text-xs font-medium ${tones[tone]}`}>
+        {label}
+      </div>
+      <p className="mt-3 text-xl font-bold text-gray-dark">{value}</p>
     </div>
   );
 }
@@ -360,6 +515,24 @@ function StatusBadge({
   return (
     <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${styles[commissionStatus] ?? "bg-gray-50 text-gray-600"}`}>
       {labels[commissionStatus] ?? commissionStatus}
+    </span>
+  );
+}
+
+function WalletTransferStatusBadge({ status }: { status: "PENDING" | "RECEIVED" }) {
+  const styles = {
+    PENDING: "bg-yellow-50 text-yellow-600",
+    RECEIVED: "bg-green-50 text-green-600",
+  };
+
+  const labels = {
+    PENDING: "لم يستلم بعد",
+    RECEIVED: "تم الاستلام",
+  };
+
+  return (
+    <span className={`px-2.5 py-1 rounded-lg text-xs font-medium ${styles[status]}`}>
+      {labels[status]}
     </span>
   );
 }

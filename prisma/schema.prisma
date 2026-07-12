@@ -81,6 +81,11 @@ enum CommissionStatus {
   CANCELLED
 }
 
+enum WalletTransferStatus {
+  PENDING
+  RECEIVED
+}
+
 enum DiscountType {
   PERCENTAGE
   FIXED
@@ -129,6 +134,7 @@ model User {
 
   // ─── NEW: E-commerce Affiliate Relations ───
   affiliateLinks         AffiliateLink[]
+  walletTransfers        AffiliateWalletTransfer[]
   reviews                Review[]
 }
 
@@ -820,4 +826,24 @@ model Commission {
   @@index([status])
   @@index([createdAt])
   @@map("commissions")
+}
+
+model AffiliateWalletTransfer {
+  id           String               @id @default(uuid())
+  userId       String               @map("user_id")
+  amount       Float
+  status       WalletTransferStatus @default(PENDING)
+  reference    String?
+  notes        String?
+  transferredAt DateTime            @default(now()) @map("transferred_at")
+  receivedAt   DateTime?            @map("received_at")
+  createdAt    DateTime             @default(now()) @map("created_at")
+  updatedAt    DateTime             @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([transferredAt])
+  @@map("affiliate_wallet_transfers")
 }

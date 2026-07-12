@@ -114,7 +114,7 @@ function isLostOrderStatus(status: string | null | undefined): boolean {
     "ملغي",
     "ملغاة",
     "فشل التسليم",
-    "مرتجع",
+    "فشل التسليم مرتجع",
     "cancelled",
     "returned",
     "return",

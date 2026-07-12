@@ -222,12 +222,6 @@ export default function AffiliateDashboardPage() {
               color="teal"
             />
             <StatCard
-              icon={<Clock size={20} />}
-              label="محول ولم يُستلم"
-              value={formatPrice(dashboard.wallet.pendingTransfers, siteCurrency, usdToTryRate)}
-              color="orange"
-            />
-            <StatCard
               icon={<XCircle size={20} />}
               label="العمولات الضائعة"
               value={formatPrice(dashboard.lostCommissions, siteCurrency, usdToTryRate)}
@@ -298,16 +292,11 @@ export default function AffiliateDashboardPage() {
           </h2>
 
           {dashboard && (
-            <div className="grid gap-4 mb-6 md:grid-cols-4">
+            <div className="grid gap-4 mb-6 md:grid-cols-3">
               <WalletCard
                 label="الرصيد المتاح"
                 value={formatPrice(dashboard.wallet.balance, siteCurrency, usdToTryRate)}
                 tone="teal"
-              />
-              <WalletCard
-                label="تم تحويله ولم يُستلم"
-                value={formatPrice(dashboard.wallet.pendingTransfers, siteCurrency, usdToTryRate)}
-                tone="orange"
               />
               <WalletCard
                 label="تم استلامه"

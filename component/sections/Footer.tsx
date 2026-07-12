@@ -33,7 +33,7 @@ const quickLinks = [
 ];
 
 const defaultSettings: GeneralSettings = {
-  siteName: "SKYNOVA",
+  siteName: "سفراء skynova",
   companyEmail: "",
   companyPhone: "",
   siteCurrency: "USD",

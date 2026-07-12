@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN;
+const DEFAULT_SITE_NAME = "سفراء skynova";
 
 export interface GeneralSettings {
   siteName: string;
@@ -21,7 +22,7 @@ export interface GeneralSettings {
 }
 
 const defaults: GeneralSettings = {
-  siteName: "SKYNOVA",
+  siteName: DEFAULT_SITE_NAME,
   companyEmail: "",
   companyPhone: "",
   siteCurrency: "USD",
@@ -36,6 +37,16 @@ const defaults: GeneralSettings = {
 
 let hasLoggedSettingsFallback = false;
 
+function resolveSiteName(siteName: string | null | undefined) {
+  const normalized = siteName?.trim();
+
+  if (!normalized || normalized.toUpperCase() === "SKYNOVA") {
+    return DEFAULT_SITE_NAME;
+  }
+
+  return normalized;
+}
+
 export async function getGeneralSettings(): Promise<GeneralSettings> {
   try {
     const settings = await prisma.generalSetting.findFirst({
@@ -45,7 +56,7 @@ export async function getGeneralSettings(): Promise<GeneralSettings> {
     if (!settings) return defaults;
 
     return {
-      siteName: settings.siteName || defaults.siteName,
+      siteName: resolveSiteName(settings.siteName),
       companyEmail: settings.companyEmail || defaults.companyEmail,
       companyPhone: settings.companyPhone || defaults.companyPhone,
       siteCurrency: settings.siteCurrency || defaults.siteCurrency,
@@ -87,7 +98,7 @@ async function uploadLogo(file: File): Promise<string> {
 
 export async function updateGeneralSettings(formData: FormData) {
   try {
-    const siteName = (formData.get("siteName") as string) || defaults.siteName;
+    const siteName = resolveSiteName(formData.get("siteName") as string | null);
     const companyEmail = (formData.get("companyEmail") as string) || null;
     const companyPhone = (formData.get("companyPhone") as string) || null;
     const siteCurrency = (formData.get("siteCurrency") as string) || defaults.siteCurrency;

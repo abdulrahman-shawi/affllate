@@ -26,11 +26,15 @@ interface ProductPageProps {
 export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
-  const product = await getProductBySlug(params.identifier, getServerCountry());
+  const [product, settings] = await Promise.all([
+    getProductBySlug(params.identifier, getServerCountry()),
+    getGeneralSettings(),
+  ]);
+  const siteName = settings.siteName || "سفراء skynova";
 
   if (!product) {
     return {
-      title: "المنتج غير موجود | SKYNOVA",
+      title: `المنتج غير موجود | ${siteName}`,
       description: "عذراً، المنتج الذي تبحثين عنه غير متوفر حالياً.",
     };
   }
@@ -39,7 +43,7 @@ export async function generateMetadata({
   const description =
     product.metaDescription?.trim() ||
     product.description ||
-    `اشترِ ${product.name} بأفضل سعر. منتج عالي الجودة للعناية بالبشرة والشعر من SKYNOVA.`;
+    `اشترِ ${product.name} بأفضل سعر. منتج عالي الجودة للعناية بالبشرة والشعر من ${siteName}.`;
   const url = `https://skynova.store/product/${product.seoSlug ?? product.id}`;
   const keywords = product.metaKeywords
     ?.split(",")
@@ -64,7 +68,7 @@ export async function generateMetadata({
       ],
       type: "website",
       locale: "ar_AR",
-      siteName: "SKYNOVA",
+      siteName,
     },
     twitter: {
       card: "summary_large_image",
@@ -122,7 +126,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     url: productUrl,
     brand: {
       "@type": "Brand",
-      name: "SKYNOVA",
+      name: settings.siteName || "سفراء skynova",
     },
     offers: {
       "@type": "Offer",

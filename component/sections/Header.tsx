@@ -59,14 +59,14 @@ export default function Header() {
 						{logo ? (
 							<Image
 								src={logo}
-								alt={siteName || "SKYNOVA"}
+								alt={siteName || "سفراء skynova"}
 								width={140}
 								height={48}
 								className="h-12 w-auto object-contain"
 							/>
 						) : (
 							<span className="text-3xl font-bold text-pink font-tajawal tracking-tight">
-								{siteName || "SKYNOVA"}
+								{siteName || "سفراء skynova"}
 							</span>
 						)}
 					</Link>

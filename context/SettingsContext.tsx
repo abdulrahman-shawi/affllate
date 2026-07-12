@@ -27,7 +27,7 @@ interface SettingsContextValue extends Settings {
 }
 
 const defaultSettings: Settings = {
-  siteName: "SKYNOVA",
+  siteName: "سفراء skynova",
   companyEmail: "",
   companyPhone: "",
   siteCurrency: "USD",

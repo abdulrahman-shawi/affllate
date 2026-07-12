@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getGeneralSettings();
-  const siteName = settings.siteName || "SKYNOVA";
+  const siteName = settings.siteName || "سفراء skynova";
   const title = `${siteName} | متجر العناية بالبشرة والشعر`;
   const description = "وجهتك الأولى لمنتجات العناية بالبشرة والشعر. نقدم لكِ أفضل المنتجات الأصلية بأسعار مميزة مع توصيل سريع.";
 

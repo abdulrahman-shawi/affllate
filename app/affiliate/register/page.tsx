@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { registerAffiliate } from "@/server/affiliate";
 
 export default function AffiliateRegisterPage() {
-  const router = useRouter();
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -16,10 +14,12 @@ export default function AffiliateRegisterPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccessMessage("");
 
     if (form.password !== form.confirmPassword) {
       setError("كلمتا المرور غير متطابقتين");
@@ -41,9 +41,14 @@ export default function AffiliateRegisterPage() {
     setLoading(false);
 
     if (result.success) {
-      localStorage.setItem("affiliate-user", JSON.stringify(result.user));
-      localStorage.setItem("affiliate-token", result.user.token);
-      router.push("/affiliate/dashboard");
+      setForm({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: "",
+      });
+      setSuccessMessage(result.message);
     } else {
       setError(result.error);
     }
@@ -53,7 +58,7 @@ export default function AffiliateRegisterPage() {
     <div dir="rtl" className="min-h-screen bg-gray-light flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8">
         <h1 className="text-2xl font-bold text-gray-dark text-center mb-2 font-tajawal">
-          انضم لبرنامج الأفلييت
+          انضم لبرنامج سفراء skynova
         </h1>
         <p className="text-gray-500 text-center mb-8 font-tajawal text-sm">
           ابدأ بتحقيق دخل إضافي من خلال التسويق لمنتجاتنا
@@ -62,6 +67,12 @@ export default function AffiliateRegisterPage() {
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 font-tajawal text-center">
             {error}
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="bg-green-50 text-green-700 p-3 rounded-lg text-sm mb-4 font-tajawal text-center">
+            {successMessage}
           </div>
         )}
 

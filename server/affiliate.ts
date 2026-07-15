@@ -129,7 +129,7 @@ export async function registerAffiliate(
   email: string,
   password: string,
   phone?: string
-): Promise<{ success: true; user: AffiliateUser } | { success: false; error: string }> {
+): Promise<{ success: true; message: string } | { success: false; error: string }> {
   try {
     const existingEmail = await prisma.user.findUnique({ where: { email } });
     if (existingEmail) {
@@ -161,17 +161,9 @@ export async function registerAffiliate(
       },
     });
 
-    const token = signToken(user.id, user.email);
-
     return {
       success: true,
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        phone: user.phone,
-        token,
-      },
+      message: "تم استلام طلب التسجيل، وسيتم تفعيل حسابك بعد المراجعة والموافقة.",
     };
   } catch (err: any) {
     console.error("AFFILIATE REGISTER ERROR:", err?.message || err);
@@ -194,7 +186,7 @@ export async function loginAffiliate(
     }
 
     if (!user.affiliateApproved) {
-      return { success: false, error: "حساب الأفلييت غير معتمد بعد" };
+      return { success: false, error: "حساب سفير skynova غير معتمد بعد" };
     }
 
     const isValid = await bcrypt.compare(password, user.password);

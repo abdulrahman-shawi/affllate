@@ -32,7 +32,7 @@ export default function AffiliateLoginPage() {
     <div dir="rtl" className="min-h-screen bg-gray-light flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-sm p-8">
         <h1 className="text-2xl font-bold text-gray-dark text-center mb-2 font-tajawal">
-          تسجيل دخول الأفلييت
+          تسجيل دخول سفراء skynova
         </h1>
         <p className="text-gray-500 text-center mb-8 font-tajawal text-sm">
           أهلاً بعودتك! سجل دخولك لإدارة روابطك وعمولاتك

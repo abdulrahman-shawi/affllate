@@ -473,7 +473,7 @@ function StatusBadge({
     );
   }
 
-  if (["مؤكد", "جاهزة للتسليم", "جاهز للتسليم", "تم استلام الطلب", "تم ارسال الطلب", "تم إرسال الطلب", "تم التسليم", "تم التوصيل", "تم تسليم الطلب", "confirmed", "shipped", "delivered"].includes(normalizedOrderStatus)) {
+  if (["تم التسليم", "تم التوصيل", "تم تسليم الطلب", "delivered"].includes(normalizedOrderStatus)) {
     return (
       <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-green-50 text-green-600">
         مؤكدة

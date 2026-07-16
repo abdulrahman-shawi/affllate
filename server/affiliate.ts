@@ -84,27 +84,19 @@ function isPotentialOrderStatus(status: string | null | undefined): boolean {
 
 function isConfirmedOrderStatus(status: string | null | undefined): boolean {
   return [
-    "مؤكد",
-    "جاهزة للتسليم",
-    "جاهز للتسليم",
-    "تم استلام الطلب",
-    "تم ارسال الطلب",
-    "تم إرسال الطلب",
     "تم التسليم",
     "تم التوصيل",
     "تم تسليم الطلب",
-    "confirmed",
-    "shipped",
     "delivered",
   ].includes(normalizeOrderStatus(status));
 }
 
 function isSuccessfulOrderStatus(status: string | null | undefined): boolean {
   return [
-    "تم استلام الطلب",
-    "تم ارسال الطلب",
-    "تم إرسال الطلب",
+    "تم التسليم",
+    "تم التوصيل",
     "تم تسليم الطلب",
+    "delivered",
   ].includes(normalizeOrderStatus(status));
 }
 

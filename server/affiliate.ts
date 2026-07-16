@@ -41,6 +41,44 @@ type WalletTransferRecord = {
   updatedAt: Date;
 };
 
+async function getPaidCommissionsTotal(userId: string): Promise<number> {
+  const paidAggregate = await prisma.commission.aggregate({
+    where: {
+      affiliateLink: { userId },
+      status: "PAID",
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  return paidAggregate._sum.amount ?? 0;
+}
+
+function reconcileWalletTransfersWithPaidCommissions(
+  walletTransfers: WalletTransferRecord[],
+  paidCommissionsTotal: number
+): WalletTransferRecord[] {
+  let remainingPaidCoverage = paidCommissionsTotal;
+
+  return walletTransfers.map((transfer) => {
+    if (transfer.status !== "RECEIVED") {
+      return transfer;
+    }
+
+    if (remainingPaidCoverage >= transfer.amount) {
+      remainingPaidCoverage -= transfer.amount;
+      return transfer;
+    }
+
+    return {
+      ...transfer,
+      status: "PENDING",
+      receivedAt: null,
+    };
+  });
+}
+
 function isMissingWalletTransfersTableError(error: any): boolean {
   const message = String(error?.message ?? "");
   return error?.code === "P2021" || message.includes("affiliate_wallet_transfers");
@@ -264,10 +302,11 @@ export async function getAffiliateLinks(userId: string) {
 
 // ─── 5. Get Dashboard Stats ───
 export async function getAffiliateDashboard(userId: string) {
-  const [links, commissions, walletTransfers]: [
+  const [links, commissions, walletTransfers, paidCommissionsTotal]: [
     AffiliateLinkDashboardRow[],
     CommissionDashboardRow[],
     WalletTransferRecord[],
+    number,
   ] = await Promise.all([
     prisma.affiliateLink.findMany({
       where: { userId },
@@ -289,7 +328,13 @@ export async function getAffiliateDashboard(userId: string) {
       },
     }),
     getAffiliateWalletTransfersSafe(userId),
+    getPaidCommissionsTotal(userId),
   ]);
+
+  const reconciledWalletTransfers = reconcileWalletTransfersWithPaidCommissions(
+    walletTransfers,
+    paidCommissionsTotal
+  );
 
   const totalClicks = links.reduce((sum: number, link: AffiliateLinkDashboardRow) => sum + link.clicks, 0);
   const orderedReferralIds = new Set(commissions.map((commission: CommissionDashboardRow) => commission.orderId));
@@ -314,10 +359,10 @@ export async function getAffiliateDashboard(userId: string) {
   const lostCommissions = commissions
     .filter((commission: CommissionDashboardRow) => isLostOrderStatus(commission.order?.status))
     .reduce((sum: number, commission: CommissionDashboardRow) => sum + commission.amount, 0);
-  const pendingWalletTransfers = walletTransfers
+  const pendingWalletTransfers = reconciledWalletTransfers
     .filter((transfer: WalletTransferRecord) => transfer.status === "PENDING")
     .reduce((sum: number, transfer: WalletTransferRecord) => sum + transfer.amount, 0);
-  const receivedWalletTransfers = walletTransfers
+  const receivedWalletTransfers = reconciledWalletTransfers
     .filter((transfer: WalletTransferRecord) => transfer.status === "RECEIVED")
     .reduce((sum: number, transfer: WalletTransferRecord) => sum + transfer.amount, 0);
   const totalWalletTransfers = pendingWalletTransfers + receivedWalletTransfers;
@@ -340,7 +385,7 @@ export async function getAffiliateDashboard(userId: string) {
       pendingTransfers: pendingWalletTransfers,
       receivedTransfers: receivedWalletTransfers,
       totalTransferred: totalWalletTransfers,
-      transferCount: walletTransfers.length,
+      transferCount: reconciledWalletTransfers.length,
     },
     links,
   };
@@ -365,7 +410,12 @@ export async function getAffiliateCommissions(userId: string) {
 }
 
 export async function getAffiliateWalletTransfers(userId: string) {
-  return getAffiliateWalletTransfersSafe(userId);
+  const [walletTransfers, paidCommissionsTotal] = await Promise.all([
+    getAffiliateWalletTransfersSafe(userId),
+    getPaidCommissionsTotal(userId),
+  ]);
+
+  return reconcileWalletTransfersWithPaidCommissions(walletTransfers, paidCommissionsTotal);
 }
 
 export async function recordAffiliateWalletTransfer(input: {

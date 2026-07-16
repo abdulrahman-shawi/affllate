@@ -211,7 +211,7 @@ export default function AffiliateDashboardPage() {
             />
             <StatCard
               icon={<CheckCircle size={20} />}
-              label="العمولات المؤكدة"
+              label="العمولات القابلة للدفع"
               value={formatPrice(dashboard.confirmedCommissions, siteCurrency, usdToTryRate)}
               color="green"
             />
@@ -299,7 +299,7 @@ export default function AffiliateDashboardPage() {
                 tone="teal"
               />
               <WalletCard
-                label="تم استلامه"
+                label="تم استلام الحوالات"
                 value={formatPrice(dashboard.wallet.receivedTransfers, siteCurrency, usdToTryRate)}
                 tone="green"
               />
@@ -465,6 +465,14 @@ function StatusBadge({
 }) {
   const normalizedOrderStatus = (orderStatus ?? "").trim().toLowerCase();
 
+  if (commissionStatus === "PAID") {
+    return (
+      <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-green-50 text-green-600">
+        مدفوعة
+      </span>
+    );
+  }
+
   if (["المتجر"].includes(normalizedOrderStatus)) {
     return (
       <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-yellow-50 text-yellow-600">
@@ -476,7 +484,7 @@ function StatusBadge({
   if (["تم التسليم", "تم التوصيل", "تم تسليم الطلب", "delivered"].includes(normalizedOrderStatus)) {
     return (
       <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-green-50 text-green-600">
-        مؤكدة
+        قابلة للدفع
       </span>
     );
   }
@@ -516,7 +524,7 @@ function WalletTransferStatusBadge({ status }: { status: "PENDING" | "RECEIVED" 
 
   const labels = {
     PENDING: "لم يستلم بعد",
-    RECEIVED: "تم الاستلام",
+    RECEIVED: "تم استلام الحوالة",
   };
 
   return (

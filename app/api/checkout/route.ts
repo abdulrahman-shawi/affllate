@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { calculateAffiliateCommission } from "@/lib/affiliateCommission";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
@@ -253,24 +254,19 @@ export async function POST(request: NextRequest) {
             select: { affiliatePrice: true, affiliateCommissionRate: true },
           });
 
-          const basePrice =
-            product && product.affiliatePrice > 0
-              ? product.affiliatePrice
-              : matchedItem.price;
-
-          const commissionRate =
-            product && product.affiliateCommissionRate != null
-              ? product.affiliateCommissionRate
-              : affiliateLink.commissionRate;
-
-          const commissionAmount =
-            (basePrice * matchedItem.quantity * commissionRate) / 100;
+          const commissionAmount = calculateAffiliateCommission({
+            affiliatePrice: product?.affiliatePrice,
+            affiliateCommissionRate: product?.affiliateCommissionRate,
+            fallbackCommissionRate: affiliateLink.commissionRate,
+            itemPrice: matchedItem.price,
+            quantity: matchedItem.quantity,
+          });
 
           await tx.commission.create({
             data: {
               affiliateLinkId: affiliateLink.id,
               orderId: order.id,
-              amount: Math.round(commissionAmount * 100) / 100,
+              amount: commissionAmount,
               status: "PENDING",
             },
           });

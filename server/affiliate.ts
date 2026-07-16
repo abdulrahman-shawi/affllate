@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { calculateAffiliateCommission } from "@/lib/affiliateCommission";
 import bcrypt from "bcryptjs";
 import { signToken, verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
@@ -487,23 +488,19 @@ export async function processAffiliateCommission(
 
       if (!link) continue;
 
-      const productPrice =
-        item.product.affiliatePrice > 0
-          ? item.product.affiliatePrice
-          : item.price;
-
-      const commissionRate =
-        item.product.affiliateCommissionRate != null
-          ? item.product.affiliateCommissionRate
-          : link.commissionRate;
-
-      const commissionAmount = (productPrice * item.quantity * commissionRate) / 100;
+      const commissionAmount = calculateAffiliateCommission({
+        affiliatePrice: item.product.affiliatePrice,
+        affiliateCommissionRate: item.product.affiliateCommissionRate,
+        fallbackCommissionRate: link.commissionRate,
+        itemPrice: item.price,
+        quantity: item.quantity,
+      });
 
       await prisma.commission.create({
         data: {
           affiliateLinkId: link.id,
           orderId: order.id,
-          amount: Math.round(commissionAmount * 100) / 100,
+          amount: commissionAmount,
           status: "PENDING",
         },
       });

@@ -264,7 +264,7 @@ export async function createAffiliateLink(
         userId,
         productId,
         uniqueCode,
-        commissionRate: commissionRate ?? 10,
+        commissionRate: commissionRate ?? 0,
       },
     });
 
@@ -533,7 +533,7 @@ export async function processAffiliateCommission(
       const commissionAmount = calculateAffiliateCommission({
         affiliatePrice: item.product.affiliatePrice,
         affiliateCommissionRate: item.product.affiliateCommissionRate,
-        fallbackCommissionRate: link.commissionRate,
+        linkCommissionRate: link.commissionRate,
         itemPrice: item.price,
         quantity: item.quantity,
       });

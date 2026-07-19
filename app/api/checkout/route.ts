@@ -257,7 +257,7 @@ export async function POST(request: NextRequest) {
           const commissionAmount = calculateAffiliateCommission({
             affiliatePrice: product?.affiliatePrice,
             affiliateCommissionRate: product?.affiliateCommissionRate,
-            fallbackCommissionRate: affiliateLink.commissionRate,
+            linkCommissionRate: affiliateLink.commissionRate,
             itemPrice: matchedItem.price,
             quantity: matchedItem.quantity,
           });
